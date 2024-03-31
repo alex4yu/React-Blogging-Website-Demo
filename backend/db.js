@@ -1,5 +1,6 @@
 const { Pool } = require("pg");
 
+//db information
 const pool = new Pool({
   user: "postgres",
   host: "localhost",
@@ -8,9 +9,9 @@ const pool = new Pool({
   port: 5432,
 });
 
-/*
-CREATE TABLE users ( id SERIAL PRIMARY KEY,name VARCHAR(50) NOT NULL,email VARCHAR(100) UNIQUE NOT NULL,password VARCHAR(100) NOT NULL);
-*/
+
+//SQL used to create users table
+//CREATE TABLE users ( id SERIAL PRIMARY KEY,name VARCHAR(50) NOT NULL,email VARCHAR(100) UNIQUE NOT NULL,password VARCHAR(100) NOT NULL);
 
 // Create a new user
 async function createUser(name, email, password) {
@@ -35,7 +36,8 @@ async function createUser(name, email, password) {
     
 }
   
-// Get a user by ID
+// Get a user by email
+// Used for log in
 async function getUserByEmail(email) {
     const query = "SELECT * FROM users WHERE email = $1";
     const values = [email];
@@ -57,7 +59,8 @@ async function getUserByEmail(email) {
     }
 }
 
-//returns true if email exists, user must choose different email
+// Returns true if email exists
+// Used in sign up, user must choose different email
 async function emailExists(email) {
     const query = 'SELECT COUNT(*) FROM users WHERE email = $1';
     const values = [email];
@@ -76,7 +79,7 @@ async function updateUser(id, name, email, password) {
     const values = [id, name, email, password];
     const result = await pool.query(query, values);
     if (result.rows.length > 0) {
-        // User retrieved successfully, return the user object
+        // User updated successfully, return the success and user object
         return {
           success: true,
           message: "User updated successfully",
@@ -84,7 +87,7 @@ async function updateUser(id, name, email, password) {
         };
     } 
     else {
-        // Query did not return a user record, handle the error
+        // Information did not update properly
         return {
           success: false,
           message: "Failed to update user"
@@ -97,9 +100,24 @@ async function deleteUser(id) {
     const query = "DELETE FROM users WHERE id = $1 RETURNING *";
     const values = [id];
     const result = await pool.query(query, values);
-    return result.rows[0];
+    if (result.rows.length > 0) {
+        // User deleted successfully
+        return {
+          success: true,
+          message: "User deleted",
+        };
+    } 
+    else {
+        // Did not delete properly
+        return {
+          success: false,
+          message: "Failed to delete user"
+        };
+    }
+    
 }
-  
+
+//export functions  
 module.exports = {
     pool,
     createUser,

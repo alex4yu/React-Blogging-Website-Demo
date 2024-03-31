@@ -10,11 +10,51 @@ const {createUser, getUserByEmail, emailExists, updateUser, deleteUser } = requi
 const bcrypt = require("bcrypt"); // For password hashing
 const bodyParser = require("body-parser");
 
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
 
-// Use cors middleware
+
 app.use(cors({
   origin: "http://localhost:3000" // Allow requests from this origin only
 }));
+
+// Parse JSON requests
+app.use(bodyParser.json());
+
+// Middleware function to log incoming requests
+const requestLoggerMiddleware = (req, res, next) => {
+  // Log request details
+  console.log("Request" + 
+    JSON.stringify({
+      timestamp: Date.now(),
+      URL: req.url,
+      Method: req.method,
+      Host: req.headers.host
+    })
+  );
+
+  // Log response details
+  
+  const originalSend = res.send;
+  res.send = function () {
+    console.log("Result" +
+      JSON.stringify({
+        timestamp: Date.now(),
+        Response: res.statusCode,
+        Message: res.message,
+        Error: res.error
+      })
+    );
+    // Call the original send function to send the response
+    originalSend.apply(res, arguments);
+  };
+    
+  next();
+};
+app.use(requestLoggerMiddleware);
+
 //API endpoint
 app.get("/api/data", (req, res) => {
   // Sample JSON data
@@ -39,14 +79,6 @@ app.get("/api/data2", (req, res) => {
     res.json(jsonData);
 });
 
-// Start the server
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
-
-// Parse JSON requests
-app.use(bodyParser.json());
-
 // Signup endpoint
 app.post("/signup", async (req, res) => {
   const { name, email, password, retypePassword } = req.body;
@@ -64,9 +96,7 @@ app.post("/signup", async (req, res) => {
   // Check if email already in use
   if(await emailExists(email)){
     return res.status(400).json({ error: "Email already in use, please choose a different one" });
-  }
-
- 
+  } 
   
   try {
     // Hash the password
@@ -85,7 +115,7 @@ app.post("/signup", async (req, res) => {
     
   } catch (error) {
     console.error("Error creating user:", error);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "An error occurred during sign up" });
   }
 })
 
@@ -117,19 +147,18 @@ app.post("/login", async (req, res) => {
 
   } catch (error) {
     console.error("Error during login:", error);
-    return res.status(500).json({ message: "An error occurred during login" });
+    return res.status(500).json({ error: "An error occurred during log in" });
   }
 });
 
 // Update endpoint
 app.post("/update", async (req, res) => {
   let {name, email, password, retypePassword, userName, userEmail, userPassword, userId } = req.body;
-  //check if any fields were left blank
   
-  
+  // Check if any fields were left blank
+  // blank fields should not be changed in the database 
   if(name === ""){
     name = userName;
-    
   }
   if(email === ""){
     email = userEmail;
@@ -142,21 +171,48 @@ app.post("/update", async (req, res) => {
     if (password !== retypePassword) {
       return res.status(400).json({ error: "Passwords do not match" });
     }
+    //hash password
+    else{
+      password = await bcrypt.hash(password, 10);
+    }
   }
 
+  // Update in database
   try {
     const result = await updateUser(userId, name, email, password);
     if(result.success){
       //return success
-      return res.status(201).json({ message: "update successful", user: result.user });
+      return res.status(201).json({ message: "Login successful", user: result.user });
     }
     else{
-      res.status(500).json({ message: "Internal server error" });
+      res.status(500).json({ error: "result failure" });
     }
     
   } catch (error) {
     console.error("Error during login:", error);
-    return res.status(500).json({ message: "An error occurred during login" });
+    return res.status(500).json({ error: "An error occurred during update" });
+  }
+});
+
+// Delete endpoint
+app.post("/delete", async (req, res) => {
+  const { id, name } = req.body;
+  
+  try {
+    // Delete user by id
+    const result = await deleteUser(id);
+
+    if(result.success){
+      //return success
+      return res.status(201).json({ message: "User deleted successfully", name: name});
+    }
+    else{
+      res.status(500).json({ error: "Internal server error" });
+    }
+
+  } catch (error) {
+    console.error("Error during login:", error);
+    return res.status(500).json({ error: "An error occurred during deletion" });
   }
 });
 

@@ -25,3 +25,26 @@
     font-size: 20px;
     cursor: pointer;
 }
+.logout{
+    text-align: center;
+    height: 30px;
+    width: 250px;
+    margin-top: 250px;
+    background: #001124;
+    color: #ffc300;
+    font-size: 20px;
+    cursor: pointer;
+    margin-right: auto;
+}
+.delete{
+    text-align: center;
+    height: 30px;
+    width: 250px;
+    margin-top: 50px;
+    background: #001124;
+    color: #ffc300;
+    font-size: 20px;
+    cursor: pointer;
+    margin-bottom: 200px;
+    margin-left: auto;
+}

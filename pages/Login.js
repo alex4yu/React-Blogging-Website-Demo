@@ -1,13 +1,12 @@
-import React, { use, useState } from "react";
+import React, { useState } from "react";
 import styles from "../styles/signup.module.css"
 
 function Login() {
-  const [formData, setFormData] = useState({email: "", password: ""});
-  const [updateData, setUpdateData] = useState({name: "", email: "", password: "", retypePassword: ""});
+  const [formData, setFormData] = useState({email: "", password: ""});// Log in inputs
+  const [updateData, setUpdateData] = useState({name: "", email: "", password: "", retypePassword: ""});// Change user info inputs
   const [message, setMessage] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
-
 
   const handleChangeLogin = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -17,6 +16,7 @@ function Login() {
     setUpdateData({ ...updateData, [e.target.name]: e.target.value });
   };
 
+  // Login
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -28,21 +28,27 @@ function Login() {
         },
         body: JSON.stringify(formData)
       });
+
       const data = await response.json();
       if (response.status === 201) { 
-        setMessage(<div className="error"></div>);
+        //display success, rerender showing logged in page
+        setMessage(<div></div>);
+        //update stored user data
         setUser(data.user);
         setLoggedIn(true);
+        //clear login inputs
         setFormData({email: "", password: "",});
       } 
       else {
-        setMessage(<div className="error">{data.message}</div>);
+        setMessage(<div>{data.message}</div>);
       }
     } catch (error) {
       console.error("Error:", error);
-      setMessage(<div className="error">An error occurred. Please try again later.</div>);
+      setMessage(<div>An error occurred. Please try again later.</div>);
     }
   };
+
+  // Change user information
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
@@ -60,23 +66,68 @@ function Login() {
           userEmail: user.email,
           userPassword: user.password,
           userId: user.id
-
         })
       });
+
       const data = await response.json();
-      if (response.status === 201) {     
+      if (response.status === 201) {    
+        //display success, rerender showing logged in page
+        //update stored user data
         setUser(data.user);
+        //clear inputs
+        setUpdateData({name: "", email: "", password: "", retypePassword: ""});
         setLoggedIn(true);
-        setMessage(<div className="error">Update successful</div>);
+        setMessage(<div>Update successful</div>);
       } else {
-        setMessage(<div className="error">{data.error}</div>);
+        setMessage(<div>{data.error}</div>);
       }
     } catch (error) {
       console.error("Error:", error);
-      setMessage(<div className="error">An error occurred. Please try again later.</div>);
+      setMessage(<div>An error occurred. Please try again later.</div>);
     }
+    
   };
 
+  const logout = () =>{
+    //log out
+    setLoggedIn(false);
+    //clear user data
+    setUser(null);
+    //clear inputs
+    setUpdateData({name: "", email: "", password: "", retypePassword: ""});
+    setMessage(<div>Logged Out</div>);
+  }
+  // Delete account
+  const handleDelete = async () => {
+    if (window.confirm('Are you sure you want to delete your account?')) {
+        if (window.confirm('Are you really, really sure? This action cannot be undone, all data will be lost!')) {
+          try {
+            const response = await fetch("http://localhost:4000/delete", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({id: user.id, name: user.name})
+            });
+            const data = await response.json();
+            if (response.status === 201) { 
+              //log out
+              setLoggedIn(false);
+              //clear user obj
+              setUser(null);
+              alert("Good Bye " + data.name);
+            } 
+            else {
+              setMessage(<div>{data.message}</div>);
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            setMessage(<div>An error occurred. Please try again later.</div>);
+          }
+        }
+    }
+  };
+  
   return (
     <div>
       {!loggedIn ? (
@@ -106,25 +157,28 @@ function Login() {
             <form onSubmit={handleUpdate}>
               <div>
                 <input className={styles.inputs} type="name" id="name" name="name" 
-                  value={formData.name} onChange={handleChangeUpdate} placeholder="New Name"/>
+                  value={updateData.name} onChange={handleChangeUpdate} placeholder="New Name"/>
               </div>
               <div>
                 <input className={styles.inputs} type="email" id="email" name="email" 
-                  value={formData.email} onChange={handleChangeUpdate} placeholder="New Email"/>
+                  value={updateData.email} onChange={handleChangeUpdate} placeholder="New Email"/>
               </div>
               <div>
                 <input className={styles.inputs} type="password" id="password" name="password" 
-                  value={formData.password} onChange={handleChangeUpdate} placeholder="New Password"/>
+                  value={updateData.password} onChange={handleChangeUpdate} placeholder="New Password"/>
               </div>
               <div>
                 <input className={styles.inputs} type="password" id="retypePassword" name="retypePassword" 
-                  value={formData.retypePassword} onChange={handleChangeUpdate} placeholder="Retype Password"/>
+                  value={updateData.retypePassword} onChange={handleChangeUpdate} placeholder="Retype Password"/>
               </div>
               <button className={styles.submitButton} type="submit">Update</button>
             </form>
             <div>{message && <div id="message">{message}</div>}</div>
-            </div>
           </div>
+          <div className={styles.logout} onClick={logout}>Log Out</div>
+          <div className={styles.delete} onClick={handleDelete}>Delete Account</div>
+        </div>
+          
       )}
     </div>
   );

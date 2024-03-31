@@ -20,7 +20,7 @@ function TodoItem({task, removeTask, changeCompletion}) {
         delete
         </div>
         </div>
-        );
+    );
       
 }
 export default TodoItem;

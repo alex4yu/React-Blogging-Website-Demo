@@ -2,7 +2,9 @@ import { useState } from "react";
 import { useEffect } from "react";
 import TodoItem from "../comp/TodoItem";
 function TodoList(){
+    //due to intial tasks, next task id starts at 3
     const[nextid, setNextid] = useState(3)
+    //intial tasks
     const[tasks, setTasks] = useState([
         {
             id: 1,
@@ -17,15 +19,21 @@ function TodoList(){
     ])
 
     const [text, setText] = useState('');
-    function addTask(taskTest){
-        var task = {id: nextid, text: taskTest, completed: false};
+
+    // Add task with title taskText
+    function addTask(taskText){
+        var task = {id: nextid, text: taskText, completed: false};
         setNextid(nextid + 1);
         setTasks([...tasks, task]);
         setText('');
     }
+    
+    //Removes task from todo list
     function removeTask(id){
         setTasks(tasks.filter(task => task.id !== id));
     }
+
+    // Toggles completion of task
     function changeCompletion(id){
         setTasks(tasks.map(task => {
             if(task.id == id){

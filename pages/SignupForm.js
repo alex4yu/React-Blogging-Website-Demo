@@ -25,11 +25,11 @@ function SignupForm() {
       if (response.status === 201) {     
         setSignedUp(true);
       } else {
-        setMessage(<div className="error">{data.error}</div>);
+        setMessage(<div>{data.error}</div>);
       }
     } catch (error) {
       console.error("Error:", error);
-      setMessage(<div className="error">An error occurred. Please try again later.</div>);
+      setMessage(<div>An error occurred. Please try again later.</div>);
     }
   };
 
