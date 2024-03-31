@@ -1,0 +1,18 @@
+.boxContainer{
+    display: inline-flex;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.box{
+    border: solid 2px #ffc300;
+    margin-right: 40px;
+    height: 25px;
+    padding: 10px;
+    cursor: pointer;
+}
+.box:hover {
+    background-color: #013269;
+}
+.display{
+    margin-top: 10px;
+}

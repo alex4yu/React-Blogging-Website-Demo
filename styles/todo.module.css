@@ -1,0 +1,25 @@
+.item{
+    display: flex;
+
+    margin-top: 8px;
+    border: solid #ffc300 3px;
+    width: 800px;
+    
+}
+.delete{
+    justify-content: space-between;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 10px;
+    cursor: pointer;
+}
+.complete{
+    display: flex;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: auto;
+    margin-right: 25px;   
+}
+.text{
+    margin-left: 10px;
+}

@@ -1,0 +1,6 @@
+Name     Email                      password
+Alex    alex@gmail.com              alex1234
+testa   test@gmail.com              12345678
+frang   frang@gmail.com             frangiscool
+joe     joe@example.com             joeslow
+jesse   j123@example.com            rocket

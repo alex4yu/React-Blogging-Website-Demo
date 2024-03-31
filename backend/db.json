@@ -1,0 +1,9 @@
+{
+    "todos": [
+      { "id": 1, "text": "Perfect react", "completed": false },
+      { "id": 2, "text": "Build a project", "completed": true },
+      { "id": 3, "text": "Eat lunch", "completed": true },
+      { "id": 4, "text": "Write essay", "completed": false },
+      { "id": 5, "text": "Watch Oppenheimer", "completed": false }
+    ]
+}

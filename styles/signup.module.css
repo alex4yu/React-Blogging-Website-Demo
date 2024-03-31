@@ -1,0 +1,27 @@
+.container{
+    height: 300px;
+    width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+.inputs{
+    height: 30px;
+    width: 250px;
+    background-color: #033870;
+    color: #ffc300;
+    font-size: 20px;
+}
+.inputs::placeholder {
+    color: #b98e01;
+    
+}
+.submitButton{
+    height: 30px;
+    width: 250px;
+    margin-top: 40px;
+    background: #001124;
+    color: #ffc300;
+    font-size: 20px;
+    cursor: pointer;
+}
