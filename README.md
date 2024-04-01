@@ -24,7 +24,8 @@ I was able to complete tasks 1 - 8.
     I implemented a middleware function that logs information about incoming requests and their results in the console.
 
 6. Database interaction
-    I created a users table in a postgre database that includes: name, email, password of user accounts. 
+    I created a users table in a postgre database that includes: name, email, password of user accounts.
+    The sql command I used can be found in backend/users.txt 
     Users can sign up with the sign up page, although a successful sign up will not "log them in"
     To log in, users must enter the email and password they signed up with in the log in page.
     Upon successful login, the user can then update any of their user information. 
@@ -49,5 +50,6 @@ I was able to complete tasks 1 - 8.
     I ran into some challenges regarding how to match the comments to the posts as well as some issues again with the code execution order
     because of asychronous nature of fetching data. 
 
+I have also added the table data which can be found in table_exports
 
 
