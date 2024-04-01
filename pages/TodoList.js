@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useEffect } from "react";
 import TodoItem from "../comp/TodoItem";
+
 function TodoList(){
     //due to intial tasks, next task id starts at 3
     const[nextid, setNextid] = useState(3)
@@ -56,17 +56,17 @@ function TodoList(){
         <button onClick={() => addTask(text)}>Add Task</button>
         {tasks.map(task => (
         <TodoItem
-        key={task.id}
-        task={task} 
-        removeTask={removeTask}
-        changeCompletion={changeCompletion}
+            key={task.id}
+            task={task} 
+            removeTask={removeTask}
+            changeCompletion={changeCompletion}
         />
         ))}
 
         </div>
 
         </>
-        );
+    );
        
 }
 

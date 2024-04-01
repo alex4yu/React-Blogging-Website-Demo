@@ -6,7 +6,8 @@ const express = require("express");
 const app = express();
 const cors = require("cors"); // Import the cors middleware
 const PORT = 4000;
-const {createUser, getUserByEmail, emailExists, updateUser, deleteUser } = require("./db");
+const {createUser, getUserById, getUserByEmail, emailExists, updateUser, deleteUser, 
+      createPost, getPosts, createComment, getComments} = require("./db");
 const bcrypt = require("bcrypt"); // For password hashing
 const bodyParser = require("body-parser");
 
@@ -28,7 +29,7 @@ const requestLoggerMiddleware = (req, res, next) => {
   // Log request details
   console.log("Request" + 
     JSON.stringify({
-      timestamp: Date.now(),
+      timestamp: new Date,
       URL: req.url,
       Method: req.method,
       Host: req.headers.host
@@ -41,7 +42,7 @@ const requestLoggerMiddleware = (req, res, next) => {
   res.send = function () {
     console.log("Result" +
       JSON.stringify({
-        timestamp: Date.now(),
+        timestamp: new Date,
         Response: res.statusCode,
         Message: res.message,
         Error: res.error
@@ -119,7 +120,7 @@ app.post("/signup", async (req, res) => {
   }
 })
 
-// Login endpoint
+// Log in endpoint
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
   
@@ -151,7 +152,29 @@ app.post("/login", async (req, res) => {
   }
 });
 
-// Update endpoint
+// Get user by Id
+app.post("/getById", async (req, res) => {
+  const { id } = req.body;
+  
+  try {
+    // Retrieve user given email
+    const result = await getUserById(id);
+
+    if(result.success){
+      //return success, user object
+      return res.status(201).json({ message: "User found successfully", user: result.user});
+    }
+    else{
+      res.status(500).json({ error: "Internal server error" });
+    }
+
+  } catch (error) {
+    console.error("Error during user get:", error);
+    return res.status(500).json({ error: "An error occurred getting user by Id" });
+  }
+});
+
+// Update user endpoint
 app.post("/update", async (req, res) => {
   let {name, email, password, retypePassword, userName, userEmail, userPassword, userId } = req.body;
   
@@ -177,7 +200,7 @@ app.post("/update", async (req, res) => {
     }
   }
 
-  // Update in database
+  // Update user in database
   try {
     const result = await updateUser(userId, name, email, password);
     if(result.success){
@@ -194,7 +217,7 @@ app.post("/update", async (req, res) => {
   }
 });
 
-// Delete endpoint
+// Delete account endpoint
 app.post("/delete", async (req, res) => {
   const { id, name } = req.body;
   
@@ -216,5 +239,114 @@ app.post("/delete", async (req, res) => {
   }
 });
 
+// Get Name by Id
+app.post("/getNameById", async (req, res) => {
+  const { id } = req.body;
+  
+  try {
+    // Retrieve user given id
+    const result = await getUserById(id);
+
+    if(result.success){
+      //return success, and user Name
+      return res.status(201).json({ message: "User found successfully", name: result.user.name});
+    }
+    else{
+      res.status(500).json({ error: "Internal server error" });
+    }
+
+  } catch (error) {
+    console.error("Error during user get:", error);
+    return res.status(500).json({ error: "An error occurred getting name by Id" });
+  }
+});
+
+// Create Post endpoint
+app.post("/createPost", async (req, res) => {
+  const {userId, title, content} = req.body;
+  
+  try {
+
+    // create post in database
+    const result = await createPost(userId, title, content);
+    if(result.success){
+      //return success
+      return res.status(201).json({ message: "post created", post: result.post});
+    }
+    else{
+      res.status(500).json({ error: "Internal server error" });
+    }
+    
+    
+  } catch (error) {
+    console.error("Error creating post:", error);
+    return res.status(500).json({ error: "An error occurred creating posts" });
+  }
+})
+
+// Get Posts endpoint
+app.post("/getPosts", async (req, res) => {
+  try {
+
+    // get all posts in database
+    const result = await getPosts();
+    if(result.success){
+      //return success
+      return res.status(201).json({ posts: result.posts });
+    }
+    else{
+      return res.status(500).json({ error: "Internal server error" });
+    }
+    
+    
+  } catch (error) {
+    console.error("Error getting posts:", error);
+    return res.status(500).json({ error: "An error occurred getting posts" });
+  }
+})
+
+// Create Comment endpoint
+app.post("/createComment", async (req, res) => {
+  const {userId, postId, content} = req.body;
+  
+  try {
+
+    // create comment in database
+    const result = await createComment(userId, postId, content);
+    if(result.success){
+      //return success
+      return res.status(201).json({ message: "comment created", comment: result.comment});
+    }
+    else{
+      res.status(500).json({ error: "Internal server error" });
+    }
+    
+    
+  } catch (error) {
+    console.error("Error creating comment:", error);
+    return res.status(500).json({ error: "An error occurred creating comment" });
+  }
+})
+
+// Get comments endpoint
+app.post("/getComments", async (req, res) => {
+  try {
+    const {postId} = req.body;
+    // get all comments for post of postId
+    const result = await getComments(postId);
+    if(result.success){
+      //return success
+      return res.status(201).json({ comments: result.comments });
+    }
+    else{
+      return res.status(500).json({ error: "no comments", comments: null });
+    }
+    
+    
+  } catch (error) {
+    console.error("Error getting posts:", error);
+    return res.status(500).json({ error: "An error occurred getting posts" });
+  }
+})
 
 

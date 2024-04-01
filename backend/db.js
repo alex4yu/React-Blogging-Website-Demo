@@ -35,6 +35,28 @@ async function createUser(name, email, password) {
     }
     
 }
+
+// Get a user by id
+async function getUserById(id) {
+  const query = "SELECT * FROM users WHERE id = $1";
+  const values = [id];
+  const result = await pool.query(query, values);
+  if (result.rows.length > 0) {
+      // User retrieved successfully, return the user object
+      return {
+        success: true,
+        message: "User retrieved successfully",
+        user: result.rows[0]
+      };
+  } 
+  else {
+      // Query did not return a user record, handle the error
+      return {
+        success: false,
+        message: "Failed to retrieve user"
+      };
+  }
+}
   
 // Get a user by email
 // Used for log in
@@ -117,13 +139,108 @@ async function deleteUser(id) {
     
 }
 
+// Add Post to post DB
+async function createPost(userId, title, content) {
+  const query = "INSERT INTO posts (user_id, title, content, created_at) VALUES ($1, $2, $3, $4) RETURNING *";
+    const values = [userId, title, content, new Date];
+    const result = await pool.query(query, values);
+    if (result.rows.length > 0) {
+        // post created successfully, return the post object
+        return {
+          success: true,
+          message: "post created successfully",
+          user: result.rows[0]
+        };
+    } 
+    else {
+        // Query did not return a post record, handle the error
+        return {
+          success: false,
+          message: "Failed to create post"
+        };
+    }
+  
+}
+
+// Get all Posts
+async function getPosts() {
+  const query = "SELECT * FROM posts";
+  const result = await pool.query(query);
+  if (result.rows.length > 0) {
+      // User retrieved successfully, return the user object
+      return {
+        success: true,
+        message: "All posts retrieved successfully",
+        posts: result.rows
+      };
+  } 
+  else {
+      // Query did not return a user record, handle the error
+      return {
+        success: false,
+        message: "Failed to retrieve posts"
+      };
+  }
+}
+
+// Add comment to comments DB
+async function createComment(userId, postId, content) {
+  const query = "INSERT INTO comments (user_id, post_id, content, created_at) VALUES ($1, $2, $3, $4) RETURNING *";
+    const values = [userId, postId, content, new Date];
+    const result = await pool.query(query, values);
+    if (result.rows.length > 0) {
+        // post created successfully, return the post object
+        return {
+          success: true,
+          message: "post created successfully",
+          comment: result.rows[0]
+        };
+    } 
+    else {
+        // Query did not return a post record, handle the error
+        return {
+          success: false,
+          message: "Failed to create post"
+        };
+    }
+  
+}
+
+// Get all comments
+async function getComments(postId) {
+  const query = "SELECT * FROM comments WHERE post_id = $1";
+  const values = [postId];
+  const result = await pool.query(query, values);
+  if (result.rows.length > 0) {
+      // comments retrieved successfully, return the comments
+      return {
+        success: true,
+        message: "All comments retrieved successfully",
+        comments: result.rows
+      };
+  } 
+  else {
+      // Query did not return comments, handle the error
+      return {
+        success: false,
+        message: "no comments"
+      };
+  }
+}
+
+
+
 //export functions  
 module.exports = {
-    pool,
     createUser,
+    getUserById,
     getUserByEmail,
     emailExists,
     updateUser,
-    deleteUser
+    deleteUser, 
+    createPost,
+    getPosts, 
+    createComment,
+    getComments
 };
 

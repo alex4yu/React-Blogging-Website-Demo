@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "../styles/signup.module.css"
 
 function Login() {
@@ -8,10 +8,58 @@ function Login() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
 
+  useEffect(()=>{
+
+    //checks if user has already logged in
+    const checkCookie = async () => {
+      const cookies = document.cookie.split(';');
+      let cookieMap = new Map();
+      for(let i = 0; i < cookies.length; i++)
+      {
+          let cookie = cookies[i];
+          if(cookie.substring(0,1) === " ")
+          {
+            cookie = cookie.substring(1);
+          }
+          let key = cookie.substring(0, cookie.indexOf("="));
+          let value = cookie.substring(cookie.indexOf("=") + 1)+"";
+          cookieMap.set(key, value);    
+      }
+      if(cookieMap.has("userId") && cookieMap.get("userId").length != 0){
+        try {
+          const response = await fetch("http://localhost:4000/getById", {
+            method: "Post",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({id : cookieMap.get("userId")})
+          });
+    
+          const data = await response.json();
+          if (response.status === 201) { 
+            
+            setUser(data.user);
+            setLoggedIn(true);
+          } 
+          else {
+            setMessage(<div>{data.message}</div>);
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          setMessage(<div>An error occurred fetching with cookie</div>);
+        }
+        
+      }
+    };
+    checkCookie();
+  }, []) 
+
+  //change login inputs
   const handleChangeLogin = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  //change user update inputs
   const handleChangeUpdate = (e) => {
     setUpdateData({ ...updateData, [e.target.name]: e.target.value });
   };
@@ -38,6 +86,8 @@ function Login() {
         setLoggedIn(true);
         //clear login inputs
         setFormData({email: "", password: "",});
+        //set cookie
+        document.cookie = "userId=" + data.user.id;
       } 
       else {
         setMessage(<div>{data.message}</div>);
@@ -95,8 +145,11 @@ function Login() {
     setUser(null);
     //clear inputs
     setUpdateData({name: "", email: "", password: "", retypePassword: ""});
+    //clear cookie
+    document.cookie = 'userId=; expires=Thu, 01 Jan 1970 00:00:00 GMT;';
     setMessage(<div>Logged Out</div>);
   }
+  
   // Delete account
   const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete your account?')) {

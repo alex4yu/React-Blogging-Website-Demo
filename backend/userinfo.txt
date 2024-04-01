@@ -5,3 +5,4 @@ frang   frang@gmail.com             frangiscool
 joe     joe@example.com             joeslow
 jesse   j123@example.com            rocket
 test2   test2@gmail.com             test2
+FinalPerson finalone@example.com    superfinal

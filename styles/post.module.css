@@ -1,0 +1,131 @@
+.postContainer{
+    margin-top: 8px;
+    border: solid #ffc300 3px;
+    border-radius: 10px;
+    width: 800px;
+    padding: 10px;
+
+}
+.title{
+    font-weight: bold;
+    font-size: 25px;
+}
+.creator{
+    font-size: 15px;
+}
+.text{
+    padding: 5px;
+    border-radius: 15px;
+    font-size: 18px;
+    margin-top: 10px;
+    width: auto;
+    min-height: 100px;
+    background: #012c5a;
+}
+.showComments{
+    margin-top: 10px;
+    cursor: pointer;
+}
+.newCommentContainer{
+    display: flex;
+    padding: 5px;
+    margin-top: 5px;
+    background: #012c5a;
+    border-radius: 10px;
+}
+.inputs{
+    margin-left: 5px;
+    border-radius: 10px;
+    padding: 5px;
+    width: 550px;
+}
+.submitComment{
+    width: fit-content;
+    margin-left: auto;
+    border-radius: 5px;
+    border: solid #ffc300 2px; 
+    padding: 2px;
+    cursor: pointer;
+}
+.newPostContainer{
+    padding: 5px;
+    margin-top: 5px;
+    border: solid #ffc300 3px;
+    border-radius: 10px;
+    width: 800px;
+}
+.newPostButton{
+    width: fit-content;
+    font-size: 30px;
+    border-radius: 5px;
+    border: solid #ffc300 3px; 
+    padding: 5px;
+    cursor: pointer;
+}
+.postSection{
+    display: flex;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    color: #ffc300;
+}
+.titleInput{
+    margin-left: 10px;
+    border-radius: 10px;
+    padding: 5px;
+    font-size: 26px;
+    width: 600px;
+    background: #012c5a;
+    color: #ffc300;
+}
+.titleInput::placeholder {
+    color: #b98e01;
+    
+}
+.contentInput{
+    width: 100%; /* Initially set to 100% width */
+    min-height: 50px; /* Initial height */
+    margin-left: 10px;
+    border-radius: 10px;
+    padding: 5px;
+    font-size: 15px;
+    background: #012c5a;
+    color: #ffc300;
+}
+.contentInput {
+    min-height: calc(50px + 2 * 1.2em); /* Adjusted height based on content */
+}
+.contentInput::placeholder {
+    color: #b98e01;
+    
+}
+.postButtons{
+    display: flex;
+    margin-top: 20px;
+}
+.cancelButton{
+    width: fit-content;
+    margin-left: 10px;
+    border-radius: 5px;
+    border: solid #012c5a 2px; 
+    background: #012c5a;
+    padding: 5px;
+    cursor: pointer;
+}
+.postButton{
+    width: fit-content;
+    margin-right: 10px;
+    margin-left: auto;
+    border-radius: 5px;
+    border: solid #012c5a 2px; 
+    background: #012c5a;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    cursor: pointer;
+}
+.comment{
+    margin-left: 10px;
+    padding: 5px;
+    background: #012c5a;
+    border-radius: 5px;
+}
