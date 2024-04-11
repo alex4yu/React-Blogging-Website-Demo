@@ -1,5 +1,4 @@
-Hello, this is my submission of the techinal assessment. 
-I was able to complete tasks 1 - 8. 
+
 1. Todo list
     The todo list is created by combining the page TodoList and the component TodoItem found in comp/TodoItem.js
     The TodoList page keeps track of all the tasks and updates the list of tasks if any should be added or removed.
@@ -46,9 +45,6 @@ I was able to complete tasks 1 - 8.
     When I pulled comments from the database it was critical that I made sure they were added to the correct post rather than being
     added to a post that it was not originally commented under. 
     Only logged in users can create new posts and comment on other posts. 
-
-    I ran into some challenges regarding how to match the comments to the posts as well as some issues again with the code execution order
-    because of asychronous nature of fetching data. 
 
 I have also added the table data which can be found in table_exports
 
